@@ -1,6 +1,6 @@
 # Agent Framework
 
-A generic LangGraph + deepagents agent framework baseline. Fork and customize for your domain. (Bootstrapped from langchain-ai/open-swe with the coding-agent functionality stripped.)
+A generic LangGraph + deepagents agent framework baseline. Use this as a template, then customize for your domain. (Originally derived from [langchain-ai/open-swe](https://github.com/langchain-ai/open-swe), with the coding-agent functionality stripped.)
 
 ## Status
 

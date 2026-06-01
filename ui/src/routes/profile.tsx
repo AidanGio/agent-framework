@@ -67,9 +67,9 @@ function ProfilePage() {
       <main className="container mx-auto p-6">
         <Card className="mx-auto max-w-2xl">
           <CardHeader>
-            <CardTitle>Your open-swe profile</CardTitle>
+            <CardTitle>Your agent-framework profile</CardTitle>
             <CardDescription>
-              These defaults are applied when you invoke open-swe from Slack, Linear, or GitHub.
+              These defaults are applied when you invoke the agent from Slack, Linear, or GitHub.
             </CardDescription>
           </CardHeader>
           <CardContent>

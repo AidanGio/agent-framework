@@ -1841,7 +1841,7 @@ wheels = [
 ]
 
 [[package]]
-name = "open-swe-agent"
+name = "agent-framework"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [

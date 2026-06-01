@@ -22,7 +22,7 @@ export function AppHeader({ user }: { user: SessionUser }) {
     <header className="border-b">
       <div className="container mx-auto flex items-center gap-4 px-4 py-3">
         <Link to="/profile" className="font-medium">
-          open-swe
+          agent-framework
         </Link>
         <nav className="flex items-center gap-3 text-sm">
           <Link
