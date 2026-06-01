@@ -1,4 +1,4 @@
-FROM python:3.14.0-slim-trixie
+FROM python:3.14.5-slim-trixie
 
 ARG UV_VERSION=0.9.26
 
