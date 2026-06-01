@@ -8,6 +8,7 @@ The template ships in no-auth dev mode (single local user); swap
 from __future__ import annotations
 
 import logging
+from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, Response
 
@@ -19,9 +20,12 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/dashboard/api", tags=["dashboard"])
 
+CurrentUser = Annotated[SessionUser, Depends(get_current_user)]
+AdminUser = Annotated[SessionUser, Depends(require_admin)]
+
 
 @router.get("/me")
-async def me(user: SessionUser = Depends(get_current_user)) -> SessionUser:
+async def me(user: CurrentUser) -> SessionUser:
     return user
 
 
@@ -38,14 +42,12 @@ async def options() -> dict:
 
 
 @router.get("/profile")
-async def get_my_profile(user: SessionUser = Depends(get_current_user)) -> dict:
+async def get_my_profile(user: CurrentUser) -> dict:
     return await get_profile(user.id) or {}
 
 
 @router.put("/profile")
-async def save_my_profile(
-    update: ProfileUpdate, user: SessionUser = Depends(get_current_user)
-) -> dict:
+async def save_my_profile(update: ProfileUpdate, user: CurrentUser) -> dict:
     try:
         update.validate_pairing()
     except ValueError as e:
@@ -54,14 +56,12 @@ async def save_my_profile(
 
 
 @router.get("/admin/profiles")
-async def admin_list_profiles(_: SessionUser = Depends(require_admin)) -> list[dict]:
+async def admin_list_profiles(_: AdminUser) -> list[dict]:
     return await list_profiles()
 
 
 @router.put("/admin/profiles/{user_id}")
-async def admin_save_profile(
-    user_id: str, update: ProfileUpdate, _: SessionUser = Depends(require_admin)
-) -> dict:
+async def admin_save_profile(user_id: str, update: ProfileUpdate, _: AdminUser) -> dict:
     try:
         update.validate_pairing()
     except ValueError as e:

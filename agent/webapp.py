@@ -145,9 +145,7 @@ async def queue_message_for_thread(
             logger.debug("No existing queued messages for thread %s", thread_id)
 
         existing_messages.append(new_message)
-        await langgraph_client.store.put_item(
-            namespace, key, {"messages": existing_messages}
-        )
+        await langgraph_client.store.put_item(namespace, key, {"messages": existing_messages})
         return True  # noqa: TRY300
     except Exception:
         logger.exception("Failed to queue message for thread %s", thread_id)

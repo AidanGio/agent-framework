@@ -91,5 +91,3 @@ def test_resolve_sandbox_work_dir_caches_the_result() -> None:
     assert first == "/workspace"
     assert second == "/workspace"
     assert backend.commands == ["test -d /workspace && test -w /workspace"]
-
-

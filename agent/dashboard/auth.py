@@ -23,6 +23,7 @@ The dev user is controlled by env vars:
 from __future__ import annotations
 
 import os
+from typing import Annotated
 
 from fastapi import Depends, HTTPException
 from pydantic import BaseModel
@@ -59,7 +60,7 @@ async def get_current_user() -> SessionUser:
     return _dev_user()
 
 
-async def require_admin(user: SessionUser = Depends(get_current_user)) -> SessionUser:
+async def require_admin(user: Annotated[SessionUser, Depends(get_current_user)]) -> SessionUser:
     """Dependency that 403s unless the current user is an admin."""
     if not user.is_admin:
         raise HTTPException(status_code=403, detail="admin access required")
