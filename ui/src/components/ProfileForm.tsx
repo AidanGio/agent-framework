@@ -1,16 +1,7 @@
 import { useEffect, useState } from "react";
 
-import type { ModelOption, Profile, ProfileUpdate, Repository } from "@/lib/api";
+import type { ModelOption, Profile, ProfileUpdate } from "@/lib/api";
 import { Button } from "@/components/ui/button";
-import {
-  Combobox,
-  ComboboxContent,
-  ComboboxEmpty,
-  ComboboxInput,
-  ComboboxItem,
-  ComboboxList,
-} from "@/components/ui/combobox";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -22,21 +13,19 @@ import {
 
 interface ProfileFormProps {
   models: Array<ModelOption>;
-  repos: Array<Repository>;
   initial: Profile;
   onSubmit: (body: ProfileUpdate) => Promise<unknown>;
   saving: boolean;
   error: string | null;
 }
 
-export function ProfileForm({ models, repos, initial, onSubmit, saving, error }: ProfileFormProps) {
+export function ProfileForm({ models, initial, onSubmit, saving, error }: ProfileFormProps) {
   const first: ModelOption | undefined = models[0];
   const [modelId, setModelId] = useState<string>(initial.default_model ?? first?.id ?? "");
   const currentModel: ModelOption | undefined = models.find((m) => m.id === modelId) ?? first;
   const [effort, setEffort] = useState<string>(
     initial.reasoning_effort ?? currentModel?.default_effort ?? "",
   );
-  const [defaultRepo, setDefaultRepo] = useState<string>(initial.default_repo ?? "");
 
   useEffect(() => {
     if (currentModel !== undefined && !currentModel.efforts.includes(effort)) {
@@ -49,7 +38,6 @@ export function ProfileForm({ models, repos, initial, onSubmit, saving, error }:
     void onSubmit({
       default_model: modelId,
       reasoning_effort: effort,
-      default_repo: defaultRepo || null,
     });
   };
 
@@ -85,39 +73,6 @@ export function ProfileForm({ models, repos, initial, onSubmit, saving, error }:
             ))}
           </SelectContent>
         </Select>
-      </div>
-
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="repo">Default repo</Label>
-        {repos.length > 0 ? (
-          <Combobox
-            items={repos.map((r) => r.full_name)}
-            value={defaultRepo}
-            onValueChange={(v) => setDefaultRepo(typeof v === "string" ? v : "")}
-          >
-            <ComboboxInput id="repo" placeholder="Search repos…" showClear />
-            <ComboboxContent className="min-w-[28rem]">
-              <ComboboxList className="max-h-80">
-                <ComboboxEmpty>No repos match</ComboboxEmpty>
-                {repos.map((r) => (
-                  <ComboboxItem key={r.full_name} value={r.full_name}>
-                    <span className="truncate">{r.full_name}</span>
-                    {r.private && (
-                      <span className="text-muted-foreground ml-auto pr-5 text-[10px]">private</span>
-                    )}
-                  </ComboboxItem>
-                ))}
-              </ComboboxList>
-            </ComboboxContent>
-          </Combobox>
-        ) : (
-          <Input
-            id="repo"
-            placeholder="owner/repo"
-            value={defaultRepo}
-            onChange={(e) => setDefaultRepo(e.target.value)}
-          />
-        )}
       </div>
 
       {error && <p className="text-destructive text-sm">{error}</p>}

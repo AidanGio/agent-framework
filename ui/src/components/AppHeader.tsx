@@ -44,10 +44,10 @@ export function AppHeader({ user }: { user: SessionUser }) {
         </nav>
         <div className="ml-auto flex items-center gap-3">
           {user.is_admin && <Badge variant="secondary">admin</Badge>}
-          <span className="text-muted-foreground text-sm">{user.login}</span>
+          <span className="text-muted-foreground text-sm">{user.name}</span>
           <Avatar className="size-7">
-            {user.avatar_url && <AvatarImage src={user.avatar_url} alt={user.login} />}
-            <AvatarFallback>{user.login.slice(0, 2).toUpperCase()}</AvatarFallback>
+            {user.avatar_url && <AvatarImage src={user.avatar_url} alt={user.name} />}
+            <AvatarFallback>{user.name.slice(0, 2).toUpperCase()}</AvatarFallback>
           </Avatar>
           <Separator orientation="vertical" className="h-6" />
           <Button variant="ghost" size="sm" onClick={onLogout}>

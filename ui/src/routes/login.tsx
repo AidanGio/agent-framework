@@ -30,13 +30,13 @@ function Login() {
         <CardHeader>
           <CardTitle>Sign in to agent-framework</CardTitle>
           <CardDescription>
-            Use your GitHub account. We'll configure your default model, reasoning effort, and
-            default repo for Slack/Linear/GitHub triggered runs.
+            Sign in to configure your default model and reasoning effort. (In the template's
+            no-auth dev mode you're signed in automatically as the local user.)
           </CardDescription>
         </CardHeader>
         <CardContent>
           <a href={loginUrl()} className={cn(buttonVariants({ size: "lg" }), "w-full")}>
-            Continue with GitHub
+            Sign in
           </a>
         </CardContent>
       </Card>

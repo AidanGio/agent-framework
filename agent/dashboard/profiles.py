@@ -52,21 +52,21 @@ async def _get_value(namespace: list[str], key: str) -> dict[str, Any] | None:
     return value if isinstance(value, dict) else None
 
 
-async def get_profile(login: str) -> dict[str, Any] | None:
-    return await _get_value(PROFILES_NAMESPACE, login)
+async def get_profile(user_id: str) -> dict[str, Any] | None:
+    return await _get_value(PROFILES_NAMESPACE, user_id)
 
 
-async def upsert_profile(login: str, email: str, update: ProfileUpdate) -> dict[str, Any]:
-    existing = await get_profile(login) or {}
+async def upsert_profile(user_id: str, email: str, update: ProfileUpdate) -> dict[str, Any]:
+    existing = await get_profile(user_id) or {}
     value: dict[str, Any] = {
         **existing,
-        "login": login,
+        "id": user_id,
         "email": email or existing.get("email", ""),
         "default_model": update.default_model,
         "reasoning_effort": update.reasoning_effort,
         "updated_at": datetime.now(UTC).isoformat(),
     }
-    await _client().store.put_item(PROFILES_NAMESPACE, login, value)
+    await _client().store.put_item(PROFILES_NAMESPACE, user_id, value)
     return value
 
 

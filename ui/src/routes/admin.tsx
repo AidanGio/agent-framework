@@ -32,8 +32,8 @@ function AdminPage() {
   });
 
   const save = useMutation({
-    mutationFn: ({ login, body }: { login: string; body: ProfileUpdate }) =>
-      api.adminSaveProfile(login, body),
+    mutationFn: ({ id, body }: { id: string; body: ProfileUpdate }) =>
+      api.adminSaveProfile(id, body),
     onSuccess: () => {
       void qc.invalidateQueries({ queryKey: ["adminProfiles"] });
       setError(null);
@@ -52,7 +52,7 @@ function AdminPage() {
   if (!session.data.is_admin) return <Navigate to="/profile" />;
 
   const activeProfile: Profile | null =
-    (selected && profiles.data?.find((p) => p.login === selected)) || null;
+    (selected && profiles.data?.find((p) => p.id === selected)) || null;
 
   return (
     <div className="min-h-svh">
@@ -69,12 +69,12 @@ function AdminPage() {
             ) : (
               profiles.data?.map((p) => (
                 <Button
-                  key={p.login}
-                  variant={selected === p.login ? "secondary" : "ghost"}
+                  key={p.id}
+                  variant={selected === p.id ? "secondary" : "ghost"}
                   className="justify-start"
-                  onClick={() => setSelected(p.login ?? null)}
+                  onClick={() => setSelected(p.id ?? null)}
                 >
-                  <span className="truncate">{p.login}</span>
+                  <span className="truncate">{p.id}</span>
                 </Button>
               ))
             )}
@@ -83,7 +83,7 @@ function AdminPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>{activeProfile?.login ?? "Select a user"}</CardTitle>
+            <CardTitle>{activeProfile?.id ?? "Select a user"}</CardTitle>
             <CardDescription>{activeProfile?.email ?? ""}</CardDescription>
           </CardHeader>
           <CardContent>
@@ -94,10 +94,9 @@ function AdminPage() {
             ) : (
               <ProfileForm
                 models={options.data?.models ?? []}
-                repos={[]}
                 initial={activeProfile}
                 onSubmit={(body) =>
-                  save.mutateAsync({ login: activeProfile.login!, body })
+                  save.mutateAsync({ id: activeProfile.id!, body })
                 }
                 saving={save.isPending}
                 error={error}

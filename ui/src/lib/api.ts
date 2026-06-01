@@ -1,8 +1,10 @@
 /**
  * Typed client for the agent-framework dashboard backend.
  *
- * All requests are sent with credentials so the httpOnly `osw_session`
- * cookie set by the OAuth callback rides along on cross-origin calls.
+ * Requests are sent with credentials so a `session` cookie (set by whatever
+ * auth provider you wire into the backend) rides along on cross-origin calls.
+ * In the template's no-auth dev mode there is no cookie — `/me` always
+ * resolves to the configured local user.
  */
 
 const API_BASE = (import.meta.env.VITE_DASHBOARD_API_BASE_URL ?? "").replace(/\/$/, "");
@@ -42,7 +44,8 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
 }
 
 export interface SessionUser {
-  login: string;
+  id: string;
+  name: string;
   email: string | null;
   avatar_url: string | null;
   is_admin: boolean;
@@ -56,34 +59,16 @@ export interface ModelOption {
 }
 
 export interface Profile {
-  login?: string;
+  id?: string;
   email?: string;
   default_model?: string;
   reasoning_effort?: string;
-  default_repo?: string | null;
   updated_at?: string;
 }
 
 export interface ProfileUpdate {
   default_model: string;
   reasoning_effort: string;
-  default_repo?: string | null;
-}
-
-export interface Repository {
-  full_name: string;
-  private: boolean;
-}
-
-export interface Installation {
-  id: number;
-  account: string | null;
-  account_type: string | null;
-}
-
-export interface ReposPayload {
-  installations: Array<Installation>;
-  repositories: Array<Repository>;
 }
 
 export const api = {
@@ -92,10 +77,9 @@ export const api = {
   profile: () => request<Profile>("/profile"),
   saveProfile: (body: ProfileUpdate) =>
     request<Profile>("/profile", { method: "PUT", body: JSON.stringify(body) }),
-  repos: () => request<ReposPayload>("/repos"),
   adminListProfiles: () => request<Array<Profile>>("/admin/profiles"),
-  adminSaveProfile: (login: string, body: ProfileUpdate & { email?: string }) =>
-    request<Profile>(`/admin/profiles/${encodeURIComponent(login)}`, {
+  adminSaveProfile: (userId: string, body: ProfileUpdate) =>
+    request<Profile>(`/admin/profiles/${encodeURIComponent(userId)}`, {
       method: "PUT",
       body: JSON.stringify(body),
     }),

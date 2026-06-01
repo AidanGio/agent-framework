@@ -7,7 +7,7 @@ import { AppHeader } from "@/components/AppHeader";
 import { ProfileForm } from "@/components/ProfileForm";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ApiError,   api } from "@/lib/api";
+import { api } from "@/lib/api";
 import { useSession } from "@/lib/session";
 
 export const Route = createFileRoute("/profile")({ component: ProfilePage });
@@ -26,19 +26,6 @@ function ProfilePage() {
   const profile = useQuery({
     queryKey: ["profile"],
     queryFn: api.profile,
-    enabled: !!session.data,
-  });
-
-  const repos = useQuery({
-    queryKey: ["repos"],
-    queryFn: async () => {
-      try {
-        return await api.repos();
-      } catch (e) {
-        if (e instanceof ApiError && e.status === 401) return { installations: [], repositories: [] };
-        throw e;
-      }
-    },
     enabled: !!session.data,
   });
 
@@ -69,7 +56,7 @@ function ProfilePage() {
           <CardHeader>
             <CardTitle>Your agent-framework profile</CardTitle>
             <CardDescription>
-              These defaults are applied when you invoke the agent from Slack, Linear, or GitHub.
+              These defaults are applied when you invoke the agent.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -78,7 +65,6 @@ function ProfilePage() {
             ) : (
               <ProfileForm
                 models={options.data?.models ?? []}
-                repos={repos.data?.repositories ?? []}
                 initial={profile.data ?? ({})}
                 onSubmit={(body) => save.mutateAsync(body)}
                 saving={save.isPending}

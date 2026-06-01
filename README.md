@@ -53,6 +53,19 @@ make format             # ruff format + ruff check --fix
 - `DASHBOARD_ALLOWED_ORIGINS` — comma-separated CORS origins
 - `LANGGRAPH_URL` — LangGraph server URL (used by the webhook handler when triggering runs)
 
+**Dashboard (`ui/`)**
+
+The optional dashboard lets users set a default model and reasoning effort. It ships
+**provider-agnostic with a no-auth dev mode** — every request is the configured local
+user, so it runs out of the box. To secure it, replace `get_current_user` in
+`agent/dashboard/auth.py` with your auth provider (OAuth/OIDC/etc.); nothing else changes.
+
+- `DASHBOARD_DEV_USER_ID` — local user id (default `local`); profiles are keyed by this
+- `DASHBOARD_DEV_USER_NAME` — display name (default `Local User`)
+- `DASHBOARD_DEV_USER_EMAIL` — local user email (default `local@example.com`)
+- `CONFIGURED_ADMINS` — comma-separated admin emails (unset → the dev user is an admin)
+- `VITE_DASHBOARD_API_BASE_URL` — (frontend) base URL of the dashboard backend
+
 ## License
 
 MIT
