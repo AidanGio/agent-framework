@@ -22,6 +22,7 @@ dependencies = [
     "langchain-modal>=0.0.3",
     "langchain-runloop>=0.0.4",
     "exa-py>=2.12.1",
+    "mcp>=1.30,<2",
 ]
 
 [project.optional-dependencies]

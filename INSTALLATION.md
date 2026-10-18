@@ -87,9 +87,17 @@ LOCAL_SANDBOX_ROOT_DIR=""
 LANGCHAIN_TRACING_V2="true"
 LANGCHAIN_PROJECT=""
 
-# === Optional: web search tool ===
-EXA_API_KEY=""
+# === Web search (no account/key needed by default) ===
+# WEB_SEARCH_PROVIDER="parallel"  # parallel | exa | none (disable)
+EXA_API_KEY=""                    # A nonempty key keeps Exa selected when provider is unset
 ```
+
+With no search configuration, `web_search` uses free anonymous
+[Parallel Search MCP](https://docs.parallel.ai/integrations/mcp/search-mcp) in Fast
+mode. Existing Exa keys keep selecting Exa. Set `WEB_SEARCH_PROVIDER=parallel` to
+choose Parallel explicitly, `exa` to require Exa, or `none` to disable search.
+Provider errors do not trigger a fallback. Parallel returns URLs and relevant
+excerpts rather than full pages; use `fetch_url` when you need more content.
 
 ## 6. Run the server
 
