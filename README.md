@@ -49,6 +49,21 @@ make format             # ruff format + ruff check --fix
 - `SLACK_SIGNING_SECRET` — for webhook signature verification
 - `SLACK_BOT_USER_ID`, `SLACK_BOT_USERNAME` — used to strip mentions from incoming messages
 
+**Web search**
+- `WEB_SEARCH_PROVIDER` — `parallel` | `exa` | `none` (disable web search). When unset,
+  a nonempty `EXA_API_KEY` keeps Exa selected; otherwise search uses anonymous
+  [Parallel Search MCP](https://docs.parallel.ai/integrations/mcp/search-mcp), powered
+  by Fast mode, with no account or API key required. Explicit provider failures
+  return errors without switching providers.
+- `EXA_API_KEY` — required when selecting `exa`.
+
+Parallel returns source URLs and relevant excerpts, with server-managed retrieval
+limits. `num_results` limits the returned list locally; `include_contents=False`
+omits excerpts. Use `fetch_url` for full page content, or select Exa to keep its
+full-text search behavior. Parallel requests time out after 30 seconds and follow
+agent cancellation. The free service has usage limits. Search queries are sent
+to the selected provider; set `WEB_SEARCH_PROVIDER=none` to prevent search requests.
+
 **Webapp**
 - `DASHBOARD_ALLOWED_ORIGINS` — comma-separated CORS origins
 - `LANGGRAPH_URL` — LangGraph server URL (used by the webhook handler when triggering runs)

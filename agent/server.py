@@ -24,6 +24,7 @@ from deepagents import create_deep_agent
 from deepagents.backends import LangSmithSandbox
 from deepagents.backends.protocol import SandboxBackendProtocol
 from langchain.agents.middleware import ModelCallLimitMiddleware
+from langchain_core.tools import StructuredTool
 from langsmith.sandbox import SandboxClientError
 
 from .dashboard.agent_overrides import (
@@ -49,6 +50,7 @@ from .tools import (
     slack_thread_reply,
     web_search,
 )
+from .tools.web_search import aweb_search
 from .utils.model import (
     AnthropicEffort,
     AnthropicThinking,
@@ -325,7 +327,7 @@ async def get_agent(config: RunnableConfig) -> Pregel:
         tools=[
             http_request,
             fetch_url,
-            web_search,
+            StructuredTool.from_function(web_search, coroutine=aweb_search),
             slack_read_thread_messages,
             slack_thread_reply,
         ],
